@@ -1,0 +1,248 @@
+{
+  "source": {
+    "device": "Xiaomi Body Composition Scale S400 (MJTZC01YM)",
+    "model": "yunmai.scales.ms104",
+    "firmware": "2.1.1_0006",
+    "image_base": "0x0080E000",
+    "soC": "Realtek RTL8762C",
+    "function": "FUN_0083101C (bia_calc_t consumer)"
+  },
+  "body_fat_percent": {
+    "formula": "clamp(100*(c0*h + c1*w + c2*age + c3*z50 + c4)/w, 3, 55)",
+    "male": [
+      -0.3315,
+      0.6216,
+      0.0183,
+      0.0085,
+      22.554
+    ],
+    "female": [
+      -0.3332,
+      0.7509,
+      0.0196,
+      0.0072,
+      22.7193
+    ],
+    "clamp": [
+      3.0,
+      55.0
+    ],
+    "note": "uses z50 only; z250 does not enter the body-fat term"
+  },
+  "regressions_9term": {
+    "form": "(k0*h + k1*w + k2*z50 + k3*z250 + k4*sqrt(h) + k5*sqrt(w) + k6*sqrt(z50) + k7*sqrt(z250) + k8)/1e6",
+    "water": [
+      2935892,
+      149065,
+      -468183,
+      589094,
+      -63286091,
+      -778045,
+      23941529,
+      -29784715,
+      424044966
+    ],
+    "bone": [
+      118543,
+      26106,
+      -45544,
+      48749,
+      -2271994,
+      -155662,
+      2151182,
+      -2248649,
+      12272558
+    ],
+    "solids": [
+      160696,
+      28769,
+      -60093,
+      65412,
+      -3163648,
+      -169504,
+      2860478,
+      -3043837,
+      18045896
+    ],
+    "skeletal_muscle": [
+      2475795,
+      118673,
+      -457174,
+      556218,
+      -53616294,
+      -574893,
+      23989719,
+      -28648257,
+      352065003
+    ],
+    "visceral_fat": [
+      -1849883,
+      424124,
+      366784,
+      -455322,
+      39648934,
+      -359012,
+      -20035428,
+      24213934,
+      -265509571
+    ]
+  },
+  "derived": {
+    "fat_mass": "round01(round01(fat_percent)/100*w)",
+    "lbm": "w - fat_mass",
+    "water_mass": "round01(round01(reg(water)) + 0.03*w)",
+    "water_percent": "round01(clamp(round01(water_mass/w*100), 20, 85))",
+    "protein_percent": "(lbm - solids - water_mass)/w*100  clamped 5..32",
+    "muscle_mass": "clamp(lbm - round01(bone), 7, 141.5)",
+    "skeletal_muscle_mass": "clamp(reg(smm), 0.45*round01(muscle), 0.70*round01(muscle))",
+    "visceral_level": "clamp(int(reg(visceral)+0.5), 1, 59)",
+    "bmr": "int(21.6*round01(lbm) + 370 + 0.5)  clamped 400..3500",
+    "bmi": "w/(h/100)^2",
+    "ideal_weight": "(h-80)*0.7 male | (h-70)*0.6 female",
+    "delta_lean": "0.85*ideal - lbm",
+    "delta_weight": "ideal - w",
+    "delta_fat": "0.15*ideal - fat_mass"
+  },
+  "body_age": {
+    "status": "derived from published model; constants verified present; one floor-limited sample matches",
+    "adult_coefficients": [
+      -1.48615435,
+      0.129089458,
+      0.591458258,
+      -0.000405611446
+    ],
+    "youth_coefficients": [
+      -1.0136192,
+      0.107155831,
+      0.277336024,
+      -0.0349702346
+    ],
+    "divisor": 2.5,
+    "reference_muscle_factor": 0.944,
+    "bmi_mid_male": [
+      15.0,
+      15.2,
+      15.45,
+      15.8,
+      16.25,
+      16.75,
+      17.35,
+      18.0,
+      18.75,
+      19.5,
+      20.2,
+      20.75,
+      22.0
+    ],
+    "bmi_mid_female": [
+      14.95,
+      15.15,
+      15.4,
+      15.85,
+      16.35,
+      17.0,
+      17.75,
+      18.5,
+      19.25,
+      19.9,
+      20.3,
+      20.65,
+      21.0
+    ],
+    "bfp_mid_male": 15.0,
+    "bfp_mid_female_adult": 23.0,
+    "bfp_mid_female_youth": [
+      16.0,
+      16.0,
+      17.0,
+      18.0,
+      19.0,
+      20.0,
+      21.0,
+      22.0,
+      23.0
+    ],
+    "shift_rules_adult": {
+      "score<-10": -10,
+      "score>=2": 2,
+      "score>=0": "int(score)+1",
+      "else": "int(score)"
+    },
+    "shift_formula": "age - shift - 4, clamped 18..100 (adults) / 6..17 (youth)"
+  },
+  "record_fields": {
+    "0": "miid high word",
+    "1": "miid low word",
+    "2": "profile slot",
+    "3": "user type",
+    "4": "weight x10",
+    "5": "heart rate",
+    "6": "status",
+    "7": "unix time",
+    "8": "body fat % x10",
+    "9": "muscle mass x10",
+    "10": "water % x10",
+    "11": "bone mass x10",
+    "12": "visceral level",
+    "13": "protein % x10",
+    "14": "skeletal muscle mass x10",
+    "15": "BMI x10",
+    "16": "ideal weight x10",
+    "17": "0.85*ideal-LBM x10",
+    "18": "ideal-weight x10",
+    "19": "0.15*ideal-fat x10",
+    "20": "unknown",
+    "21": "BMR",
+    "22": "body type index",
+    "23": "metabolic age",
+    "24": "body score (unknown formula)",
+    "25": "muscle % x10",
+    "26": "bone % x10",
+    "27": "fat mass x10",
+    "28": "fat-free mass x10",
+    "29": "water mass x10",
+    "30": "protein mass x10",
+    "31": "z50 x10",
+    "32": "z250 x10"
+  },
+  "panel_offsets": {
+    "0x00": "fat %",
+    "0x08": "muscle kg",
+    "0x10": "water %",
+    "0x18": "bone kg",
+    "0x20": "visceral",
+    "0x28": "protein %",
+    "0x30": "skeletal muscle kg",
+    "0x38": "BMI",
+    "0x40": "ideal weight",
+    "0x48": "0.85*ideal-LBM",
+    "0x50": "ideal-weight",
+    "0x58": "0.15*ideal-fat",
+    "0x78": "BMR (int16)",
+    "0x80": "muscle %",
+    "0x88": "bone %",
+    "0x90": "fat kg",
+    "0x98": "fat-free kg",
+    "0xa0": "water kg",
+    "0xa8": "protein kg"
+  },
+  "impedance_smoothing": {
+    "function": "FUN_0081CE6C",
+    "type": "gated weighted average of stored per-profile impedance and current measurement",
+    "weight_gate_0_1kg": {
+      "no_smoothing_above": 60,
+      "fifty_fifty_at_least": 36
+    },
+    "time_windows_s": {
+      "stored_only_below": 601,
+      "blend_80_20_upto": 1800,
+      "blend_50_50_above": 1800
+    },
+    "blend_arithmetic": "(stored*80 + current*20)/100   or   (stored+current)*50/100"
+  },
+  "verified_against_real_record": {
+    "profile": "one male adult record (values not published)",
+    "fields_matching": 19,
+    "max_deviation": "0.0 (exact to the record's 0.1 resolution)"
+  }
+}

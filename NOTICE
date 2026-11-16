@@ -1,0 +1,15 @@
+xiaomi-s400-re
+Copyright the xiaomi-s400-re contributors.
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Scope of the licence: it covers the documentation, data files and scripts in this
+repository. It does not cover Xiaomi's firmware or any code derived from it by
+decompilation. No firmware images or decompiled firmware code are included here;
+the scripts fetch and unpack firmware on the user's own machine.
+
+The body-composition model in tools/s400_model.py follows the Xiaomi model
+reverse-engineered and published by RX14 under the Apache License, Version 2.0.
+
+"Xiaomi" and product names are trademarks of their respective owners and are used
+here only to identify the hardware this work interoperates with.

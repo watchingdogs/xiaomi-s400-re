@@ -1,0 +1,18 @@
+# Decompiled vendor code: regenerate locally with ghidra_scripts/, never publish
+decompiled/
+
+# Firmware images and extraction output (Xiaomi's code, fetch with tools/xiaomi_fw_fetch.py)
+*.bin
+fw/
+
+# Local credentials and captured data
+credentials*.json
+!credentials.example.json
+records.json
+records.csv
+*.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
